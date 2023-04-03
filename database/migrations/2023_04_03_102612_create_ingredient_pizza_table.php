@@ -15,10 +15,23 @@ return new class extends Migration
     {
         Schema::create('ingredient_pizza', function (Blueprint $table) {
             $table->id();
+
             $table->unsignedBigInteger('ingredient_id');
-            $table->foreign('ingredient_id')->references('id')->on('ingredients')->onDelete('cascade');
+
+            $table->foreign('ingredient_id')
+                ->references('id')
+                ->on('ingredients')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+
             $table->unsignedBigInteger('pizza_id');
-            $table->foreign('pizza_id')->references('id')->on('pizzas')->onDelete('cascade');
+
+            $table->foreign('pizza_id')
+                ->references('id')
+                ->on('pizzas')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+
             $table->timestamps();
         });
     }
