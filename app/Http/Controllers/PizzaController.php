@@ -33,7 +33,7 @@ class PizzaController extends Controller
             // );
 
             $validator = Validator::make($request->all(), [
-                'name' => 'required',
+                'name' => 'required | regex:/[A-Za-z0-9]+$/',
                 'type' => 'required',
             ]);
      
