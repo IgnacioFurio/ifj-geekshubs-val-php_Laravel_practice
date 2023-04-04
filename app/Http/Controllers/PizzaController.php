@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Pizza;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class PizzaController extends Controller
 {
     public function getallPizzas()
     {
+        //ToDo error handler
         $pizzas = Pizza::all();
 
         return [
@@ -30,6 +32,15 @@ class PizzaController extends Controller
             //     ]
             // );
 
+            $validator = Validator::make($request->all(), [
+                'name' => 'required',
+                'type' => 'required',
+            ]);
+     
+            if ($validator->fails()) {
+                return response()->json($validator->errors(), 400);
+            }
+
             $pizza = new Pizza();
 
             $pizza->name = $request->input('name');
@@ -37,14 +48,24 @@ class PizzaController extends Controller
 
             $pizza->save();
 
-            return [
-                "succes" => true,
-                "data" => $pizza
-            ];
+            return response()->json(
+                [
+                    "success" => true,
+                    "message" => "New pizza created",
+                    "data" => $pizza
+                ],
+                200
+            );
 
         } catch (\Throwable $th) {
             //throw $th;
-            return $th->getMessage();
+            return response()->json(
+                [
+                    "success" => false,
+                    "message" => $th->getMessage()
+                ],
+                500
+            );
         }
     }
 }
