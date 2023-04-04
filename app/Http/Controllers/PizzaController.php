@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Pizza;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -33,6 +34,8 @@ class PizzaController extends Controller
             //     ]
             // );
 
+            Log::info("Create Pizza");
+
             $validator = Validator::make($request->all(), [
                 'name' => 'required | regex:/[A-Za-z0-9]+$/',
                 'type' => 'required',
@@ -60,10 +63,11 @@ class PizzaController extends Controller
 
         } catch (\Throwable $th) {
             //throw $th;
+            Log::error("CREATING PIZZA ".$th->getMessage());
             return response()->json(
                 [
                     "success" => false,
-                    "message" => $th->getMessage()
+                    "message" => "error creating pizza"
                 ],
                 500
             );
@@ -150,6 +154,33 @@ class PizzaController extends Controller
                     "message" => "Seek and destroyed",
                 ],
                 200
+            );
+
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json(
+                [
+                    "success" => false,
+                    "message" => $th->getMessage()
+                ],
+                500
+            );
+        }
+    }
+
+    public function getPizzaById(Request $request, $id)
+    {
+        try {
+            //code...
+
+            $pizza = Pizza::query()->find($id);
+
+            return response()->json(
+                [
+                    "success" => true,
+                    "message" => "Pizza information",
+                    "data" => $pizza
+                ]
             );
 
         } catch (\Throwable $th) {
