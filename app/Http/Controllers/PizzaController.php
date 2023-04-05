@@ -222,4 +222,23 @@ class PizzaController extends Controller
             );
         }
     }
+
+    public function getPizabyIdWithIngredients(Request $request, $id)
+    {
+        try {
+            //code...
+
+            $pizzaByIdWithIngredients = Pizza::query()->find($id);
+            
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json(
+                [
+                    "success" => false,
+                    "message" => $th->getMessage()
+                ],
+                500
+            );
+        }
+    }
 }

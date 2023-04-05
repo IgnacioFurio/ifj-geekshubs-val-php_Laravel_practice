@@ -6,6 +6,7 @@ use App\Models\Ingredient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class IngredientController extends Controller
 {
@@ -27,6 +28,7 @@ class IngredientController extends Controller
             Log::info("Create Pizza");
 
             $validator = Validator::make($request->all(), [
+                'quantity' => 'required',
                 'name' => 'required | regex:/[A-Za-z0-9]+$/',
                 'type' => 'required',
             ]);
@@ -37,6 +39,7 @@ class IngredientController extends Controller
 
             $ingredients = new Ingredient();
 
+            $ingredients->name = $request->input('quantity');
             $ingredients->name = $request->input('name');
             $ingredients->type = $request->input('type');
 
@@ -45,7 +48,7 @@ class IngredientController extends Controller
             return response()->json(
                 [
                     "success" => true,
-                    "message" => "New pizza created",
+                    "message" => "New Ingredient created",
                     "data" => $ingredients
                 ],
                 200
@@ -53,26 +56,27 @@ class IngredientController extends Controller
 
         } catch (\Throwable $th) {
             //throw $th;
-            Log::error("CREATING PIZZA ".$th->getMessage());
+            Log::error("CREATING INGREDIENT ".$th->getMessage());
             return response()->json(
                 [
                     "success" => false,
-                    "message" => "error creating pizza"
+                    "message" => "error creating ingredient"
                 ],
                 500
             );
         }
     }
 
-    public function updatePizza(Request $request, $id)
+    public function updateIngredient(Request $request, $id)
     {
         try {
             //code...
 
             $validator = Validator::make($request->all(), [
+                'quantity' => 'required',
                 'name' => 'required | regex:/[A-Za-z0-9]+$/',
                 'type' => [
-                    Rule::in(['fina', 'pan_pizza', 'original'])
+                    Rule::in(['animal', 'vegetal'])
                 ],
             ]);
     
@@ -81,38 +85,43 @@ class IngredientController extends Controller
             }
 
             //save info from request
-            $pizza = Pizza::find($id);
+            $ingredients = Ingredient::find($id);
 
-            if(!$pizza){
+            if(!$ingredients){
                 return response()->json(
                     [
                         "success" => false,
-                        "message" => 'Pizza do not exist'
+                        "message" => 'Ingredient do not exist'
                     ]
                 );
             }
 
-            $pizza->name = $request->input("name");
-            $pizza->name = $request->input("type");
+            $ingredients->quantity = $request->input("quantity");
+            $ingredients->name = $request->input("name");
+            $ingredients->type = $request->input("type");
 
             //if exist and no null, set variables in pizza
             if(isset($name)){
-                $pizza->name = $request->input("name");
+                $ingredients->quantity = $request->input("quantity");
             }
 
             if(isset($name)){
-                $pizza->type = $request->input("type");
+                $ingredients->name = $request->input("name");
+            }
+
+            if(isset($name)){
+                $ingredients->type = $request->input("type");
             }
 
 
-            $pizza->save();
+            $ingredients->save();
             
 
             return response()->json(
                 [
                     "success" => true,
-                    "message" => "Pizza updated",
-                    "data" => $pizza
+                    "message" => "Ingredient updated",
+                    "data" => $ingredients
                 ]
             );
 
@@ -128,12 +137,12 @@ class IngredientController extends Controller
         }
     }
 
-    public function deletePizza(Request $request, $id)
+    public function deleteIngredient(Request $request, $id)
     {
         try {
             //code...
 
-            Pizza::destroy($id);
+            Ingredient::destroy($id);
 
             //another way
             // Pizza::query()->where('id', $id)->delete();

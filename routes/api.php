@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\IngredientController;
 use App\Http\Controllers\PizzaController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\UserController;
@@ -53,10 +54,10 @@ Route::group([
 );
 
 //INGREDIENTS
-Route::get('/pizza', [PizzaController::class, "getAllPizzas"]);
-Route::post('/pizza', [PizzaController::class, "createPizza"]);
-Route::put('/pizza/{id}', [PizzaController::class, "updatePizza"]);
-Route::delete('/pizza/{id}', [PizzaController::class, "deletePizza"]);
+Route::get('/ingredients', [IngredientController::class, "getallIngredients"]);
+Route::post('/ingredients', [IngredientController::class, "createIngredient"]);
+Route::put('/ingredients/{id}', [IngredientController::class, "updateIngredient"]);
+Route::delete('/ingredients/{id}', [IngredientController::class, "deleteIngredient"]);
 
 //REVIEWS
 Route::group(

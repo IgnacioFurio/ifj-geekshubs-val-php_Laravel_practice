@@ -11,6 +11,6 @@ class Ingredient extends Model
 
     public function pizza()
     {
-        return $this->belongsTo(Pizza::class);
+        return $this->hasMany(Pizza::class);
     }
 }
