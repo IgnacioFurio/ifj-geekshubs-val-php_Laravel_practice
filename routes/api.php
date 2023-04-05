@@ -36,6 +36,7 @@ Route::delete('/users', [UserController::class, "deleteUser"]);
 Route::get('/pizza', [PizzaController::class, "getAllPizzas"]);
 Route::post('/pizza', [PizzaController::class, "createPizza"]);
 Route::put('/pizza/{id}', [PizzaController::class, "updatePizza"]);
+Route::delete('/pizza/{id}', [PizzaController::class, "deletePizza"]);
 Route::get('/pizza/{id}', [PizzaController::class, "getPizzaById"]);
 Route::get('/pizza/review/{id}', [PizzaController::class, "getPizzaByIdWithReviews"]);
 
@@ -50,6 +51,12 @@ Route::group([
         Route::get('/profile', [AuthController::class, 'profile']);
     }
 );
+
+//INGREDIENTS
+Route::get('/pizza', [PizzaController::class, "getAllPizzas"]);
+Route::post('/pizza', [PizzaController::class, "createPizza"]);
+Route::put('/pizza/{id}', [PizzaController::class, "updatePizza"]);
+Route::delete('/pizza/{id}', [PizzaController::class, "deletePizza"]);
 
 //REVIEWS
 Route::group(
