@@ -296,4 +296,56 @@ class PizzaController extends Controller
             );
         }
     }
+
+    public function deleteIngredientToPizzaId(Request $request, $id)
+    {
+        try {
+            //code...
+            
+            $ingredients = $request->input('ingredients');
+            
+            $pizza = Pizza::find($id);
+
+            foreach($ingredients as $valor){
+
+            $pizza->ingredients()->detach($valor);
+            $pizza->ingredients;
+        }
+
+
+
+            // $pizza->ingredients()->detach($ingredientId);
+            // $pizza->ingredients;
+            
+            if(!$pizza){
+                return response()->json(
+                    [
+                        "success" => false,
+                        "message" => "404 Pizza not found"
+                    ],
+                    404
+                );
+            }
+            
+            return response()->json(
+                [
+                    "success" => true,
+                    "message" => "Pizza ingredient deleted",
+                    "data" => $pizza
+                ],
+                200
+            );
+            
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json(
+                [
+                    "success" => false,
+                    "message" => $th->getMessage()
+                ],
+                500
+            );
+        }
+    }
+    
 }

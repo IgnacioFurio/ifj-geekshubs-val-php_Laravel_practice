@@ -42,13 +42,14 @@ Route::get('/pizza/{id}', [PizzaController::class, "getPizzaById"]);
 Route::get('/pizza/review/{id}', [PizzaController::class, "getPizzaByIdWithReviews"]);
 Route::get('/pizza/ingredients/{id}', [PizzaController::class, "getPizzaByIdWithIngredients"]);
 Route::post('/pizza/add-ingredients/{id}', [PizzaController::class, "addIngredientToPizzaId"]);
+Route::delete('/pizza/delete-ingredients/{id}', [PizzaController::class, "deleteIngredientToPizzaId"]);
 
 //AUTH
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::group([
-        'middleware' => 'auth:sanctum'
+        'middleware' => ['auth:sanctum', 'isAdmin']
     ], function () {
         Route::post('/logout', [AuthController::class, 'logout']);
         Route::get('/profile', [AuthController::class, 'profile']);
