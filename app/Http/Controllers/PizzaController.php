@@ -194,4 +194,22 @@ class PizzaController extends Controller
             );
         }
     }
+
+    public function getPizzaByIdWithReviews(Request $request)
+    {
+        try {
+            //code...
+        } catch (\Throwable $th) {
+            //throw $th;
+            $pizzaByIdWithReviews = Pizza::query()->find($id)->reviews;
+            
+            return response()->json(
+                [
+                    "success" => false,
+                    "message" => $th->getMessage()
+                ],
+                500
+            );
+        }
+    }
 }

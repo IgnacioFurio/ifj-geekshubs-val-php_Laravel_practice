@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PizzaController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -35,17 +36,29 @@ Route::delete('/users', [UserController::class, "deleteUser"]);
 Route::get('/pizza', [PizzaController::class, "getAllPizzas"]);
 Route::post('/pizza', [PizzaController::class, "createPizza"]);
 Route::put('/pizza/{id}', [PizzaController::class, "updatePizza"]);
-Route::get('/pizza-by-id/{id}', [PizzaController::class, "getPizzaById"]);
+Route::get('/pizza/{id}', [PizzaController::class, "getPizzaById"]);
+Route::get('/pizza/review/{id}', [PizzaController::class, "getPizzaByIdWithReviews"]);
 
 //AUTH
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::group([
-    'middleware' => 'auth:sanctum'
-], function () {
-    Route::post('/logout', [AuthController::class, 'logout']);
-    Route::get('/profile', [AuthController::class, 'profile']);
-}
+        'middleware' => 'auth:sanctum'
+    ], function () {
+        Route::post('/logout', [AuthController::class, 'logout']);
+        Route::get('/profile', [AuthController::class, 'profile']);
+    }
+);
+
+//REVIEWS
+Route::group(
+    [
+        'middleware' => 'auth:sanctum'
+    ], 
+    function () 
+    {
+        Route::post('/reviews', [ReviewController::class, 'createReview']);
+    }
 );
 
