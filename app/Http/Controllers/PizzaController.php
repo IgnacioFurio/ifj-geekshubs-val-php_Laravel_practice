@@ -207,7 +207,8 @@ class PizzaController extends Controller
                     "success" => true,
                     "message" => "Pizza Reviews",
                     "data" => $pizzaByIdWithReviews
-                ]
+                ],
+                200
             );
 
 
@@ -223,13 +224,67 @@ class PizzaController extends Controller
         }
     }
 
-    public function getPizabyIdWithIngredients(Request $request, $id)
+    public function getPizzaByIdWithIngredients(Request $request, $id)
     {
         try {
             //code...
 
             $pizzaByIdWithIngredients = Pizza::query()->find($id);
+
+            $pizzaByIdWithIngredients->ingredients;
             
+            return response()->json(
+                [
+                    "success" => true,
+                    "message" => "Pizza Reviews",
+                    "data" => $pizzaByIdWithIngredients
+                ],
+                200
+            );
+
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json(
+                [
+                    "success" => false,
+                    "message" => $th->getMessage()
+                ],
+                500
+            );
+        }
+    }
+
+    public function addIngredientToPizzaId(Request $request, $id)
+    {
+        try {
+            //code...
+
+            $ingredientId = $request->input('ingredient_id');
+
+            $pizza = Pizza::find($id);
+
+            $pizza->ingredients()->attach($ingredientId);
+            $pizza->ingredients;
+
+            if(!$pizza){
+                return response()->json(
+                    [
+                        "success" => false,
+                        "message" => "404 Pizza not found"
+                    ],
+                    404
+                );
+            }
+
+            return response()->json(
+                [
+                    "success" => true,
+                    "message" => "Pizza ingredient added",
+                    "data" => $pizza
+                ],
+                200
+            );
+
         } catch (\Throwable $th) {
             //throw $th;
             return response()->json(

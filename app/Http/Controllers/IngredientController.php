@@ -12,7 +12,7 @@ class IngredientController extends Controller
 {
     public function getallIngredients()
     {
-        //ToDo error handler
+        //ToDo error handler and Log
         $ingredients = Ingredient::all();
 
         return [
@@ -25,7 +25,7 @@ class IngredientController extends Controller
     {
         try {
 
-            Log::info("Create Pizza");
+            Log::info("Create Ingredient");
 
             $validator = Validator::make($request->all(), [
                 'quantity' => 'required',
@@ -39,7 +39,7 @@ class IngredientController extends Controller
 
             $ingredients = new Ingredient();
 
-            $ingredients->name = $request->input('quantity');
+            $ingredients->quantity = $request->input('quantity');
             $ingredients->name = $request->input('name');
             $ingredients->type = $request->input('type');
 
@@ -71,6 +71,7 @@ class IngredientController extends Controller
     {
         try {
             //code...
+            //ToDo Log
 
             $validator = Validator::make($request->all(), [
                 'quantity' => 'required',
@@ -141,6 +142,8 @@ class IngredientController extends Controller
     {
         try {
             //code...
+            //ToDo Log
+
 
             Ingredient::destroy($id);
 
