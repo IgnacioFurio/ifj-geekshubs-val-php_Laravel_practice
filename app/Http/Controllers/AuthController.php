@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\RegisterMail;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Laravel\Sanctum\PersonalAccessToken;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -12,29 +15,50 @@ class AuthController extends Controller
 {
     public function register(Request $request)
     {
+        try {
+            //code...
+            $request->validate([
+                'name' => 'required|string',
+                'email' => 'required|string|unique:users,email',
+                'password' => 'required|string|min:6|max:12',
+            ]);
+    
+            $user = User::create([
+                'name' => $request['name'],
+                'email' => $request['email'],
+                'password' => bcrypt($request['password'])
+            ]);
+    
+            $token = $user->createToken('apiToken')->plainTextToken;
+    
+            $res = [
+                "data" => $user,
+                "token" => $token
+            ];
 
-        //ToDo trycatch validator
-        $request->validate([
-            'name' => 'required|string',
-            'email' => 'required|string|unique:users,email',
-            'password' => 'required|string|min:6|max:12',
-        ]);
+            Mail::to($request['email'])->send(new RegisterMail($request['name']));
 
-        $user = User::create([
-            'name' => $request['name'],
-            'email' => $request['email'],
-            'password' => bcrypt($request['password'])
-        ]);
+        return response()->json(
+            [
+                "success" => true,
+                "message" => "User registered successfully",
+                "data" => $res
+            ],
+            200
+        );
 
-        $token = $user->createToken('apiToken')->plainTextToken;
+        } catch (\Throwable $th) {
+            //throw $th;
+            Log::info("REGISTER USER ".$th->getMessage());
 
-        $res = [
-            "success" => true,
-            "message" => "User registered successfully",
-            'data' => $user,
-            "token" => $token
-        ];
-    return response($res, Response::HTTP_CREATED);
+            return response()->json(
+                [
+                    "success" => false,
+                    "message" => "Error registering new user"
+                ],
+                500
+            );
+        }
     }
 
     public function login(Request $request)
