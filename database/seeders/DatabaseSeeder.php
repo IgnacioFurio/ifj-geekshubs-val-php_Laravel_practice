@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             PizzaSeeder::class,
             IngredientSeeder::class,
             IngredientPizzaSeeder::class,
+            RoleSeeder::class
         ]);
         \App\Models\Review::factory(1000)->create();
 
