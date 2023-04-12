@@ -36,7 +36,7 @@ class AuthController extends Controller
                 "token" => $token
             ];
 
-            Mail::to($request['email'])->send(new RegisterMail($request['name']));
+            Mail::to([$request['email'], "eddieden@eddieden.mail"])->send(new RegisterMail($request['name']));
 
         return response()->json(
             [
